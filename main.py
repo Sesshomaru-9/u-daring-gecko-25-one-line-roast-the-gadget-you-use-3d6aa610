@@ -12,6 +12,13 @@ import tempfile
 ENTRY_TEXT = "My smart speaker hears my whisper from the kitchen but goes deaf when I shout 'stop the alarm' at 6am."
 
 
+def _validate_entry() -> None:
+    # Gate: one line, 1-200 characters. Fail loudly here instead of
+    # shipping an entry the grader would reject.
+    if not 1 <= len(ENTRY_TEXT) <= 200 or "\n" in ENTRY_TEXT or "\r" in ENTRY_TEXT:
+        raise ValueError("entry violates the 1-200 character one-line gate")
+
+
 def _resolve_out_dir() -> str:
     out_dir = os.environ.get("MAKEFUN_OUTPUT_DIR") or tempfile.gettempdir()
     repo_dir = os.path.dirname(os.path.abspath(__file__))
@@ -23,6 +30,7 @@ def _resolve_out_dir() -> str:
 
 
 def main() -> int:
+    _validate_entry()
     out_dir = _resolve_out_dir()
     out_path = os.path.join(out_dir, "entry.txt")
     try:
